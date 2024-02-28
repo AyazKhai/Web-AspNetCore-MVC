@@ -11,6 +11,7 @@ namespace WebApplicationTest.TagHelpers
     {
         public string FName { get; set; }
         public string LName { get; set; }
+        public string minstanding { get; set; }
 
         public SortState Property { get; set; } // значение текущего свойства, для которого создается тег
         public SortState Current { get; set; }  // значение активного свойства, выбранного для сортировки
@@ -37,6 +38,7 @@ namespace WebApplicationTest.TagHelpers
             {
                 FName,
                 LName,
+                minstanding,
                 sortOrder = Property
             };
 

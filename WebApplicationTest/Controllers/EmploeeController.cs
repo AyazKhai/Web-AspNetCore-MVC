@@ -11,6 +11,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using System.IO;
 using System.Text.Json;
 using System.Text;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace WebApplicationTest.Controllers
 {
@@ -36,57 +37,16 @@ namespace WebApplicationTest.Controllers
            
         }
 
-        [NonAction]
-        public async Task<IActionResult> GetEmployees(string? FName, string? LName)
-        {
-            IQueryable<Emploee> empls = _context.Emploees;
-
-            if (!string.IsNullOrWhiteSpace(FName))
-            {
-                empls = empls.Where(p => p.FName.Contains(FName));
-            }
-
-            if (!string.IsNullOrWhiteSpace(LName))
-            {
-                empls = empls.Where(p => p.LName.Contains(LName));
-            }
-
-            IndexViewModel viewModel = new IndexViewModel
-            {
-                Emploees = await empls.ToListAsync(),
-            };
-
-            return View(viewModel);
-            //IQueryable<Emploee> empls = _context.Emploees.Include(p => p.FName);
-            //if (FName != null && FName != " ")
-            //{
-            //    empls = empls.Where(p => p.FName == FName);
-            //}
-            //if (!string.IsNullOrEmpty(FName))
-            //{
-            //    empls = empls.Where(p => p.FName!.Contains(FName));
-            //}
-
-            ////List<Company> companies = db.Companies.ToList();
-            ////// устанавливаем начальный элемент, который позволит выбрать всех
-            ////companies.Insert(0, new Company { Name = "Все", Id = 0 });
-
-            //IndexViewModel viewModel = new IndexViewModel
-            //{
-            //    Emploees = empls.ToList(),
-            //    //Users = users.ToList(),
-            //    //Companies = new SelectList(companies, "Id", "Name", company),
-            //    //Name = name
-            //};
-            //return (IActionResult)viewModel;
-        }
+        
         [HttpGet]
-        public async Task<IActionResult> GetEmployees(string? FName, string? LName, SortState sortOrder = SortState.FNameAsc)
+        public async Task<IActionResult> GetEmployees(string? FName, string? LName, string minstanding, SortState sortOrder = SortState.FNameAsc)
         {
             TempData["FName"] = FName;
             TempData["LName"] = LName;
+            TempData["minstanding"] = minstanding;
             IQueryable<Emploee> users = _context.Emploees;
-
+            //DateTime standingDate = DateTime.Now.AddMonths(Convert.ToInt32(standing) * (-1));
+            DateTime standingDate = DateTime.Now.AddYears(Convert.ToInt32(minstanding)*(-1));
             // Фильтрация по имени
             if (!string.IsNullOrWhiteSpace(FName))
             {
@@ -98,7 +58,11 @@ namespace WebApplicationTest.Controllers
             {
                 users = users.Where(s => s.LName.Contains(LName));
             }
-
+            // Фильтрация по стажу
+            if (minstanding != "0"|| minstanding != null)
+            {
+                users = users.Where(s => s.DateOfHire < standingDate);
+            }
             // Применение сортировки
             users = sortOrder switch
             {
@@ -197,6 +161,52 @@ namespace WebApplicationTest.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction("GetEmployees");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UploadJsonFile(IFormFile file)
+        {
+            try
+            {
+                if (file == null || file.Length == 0)
+                {
+                    @TempData["NoFileMessage"] = "Пожалуйста выберите файл";
+                   return RedirectToAction("GetEmployees");
+                }
+               
+                using (var streamReader = new StreamReader(file.OpenReadStream()))
+                {
+                    var jsonString = await streamReader.ReadToEndAsync();
+
+                    // Десериализация JSON
+                    var employees = JsonSerializer.Deserialize<List<Emploee>>(jsonString);
+                    if (employees != null && employees.Any())
+                    {
+                        // Устанавливаем Id в 0 для каждого объекта
+                        foreach (var employee in employees)
+                        {
+                            employee.Id = 0;
+                        }
+
+                        // Добавление данных в базу данных
+                        _context.Emploees.AddRange(employees);
+                        await _context.SaveChangesAsync();
+                        TempData["SuccessMessage"] = "Успешно добавлено";
+                        return RedirectToAction("GetEmployees");
+                        //return Ok("Данные успешно добавлены в базу данных.");
+                    }
+                    else
+                    {
+                        @TempData["ErrorMessage"] = "Ошибка";
+                        return RedirectToAction("GetEmployees");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                @TempData["ErrorMessage"] = "Ошибка";
+                return RedirectToAction("GetEmployees");
+            }
+        }
         public async Task<IActionResult> DownloadFile(int? id)
         {
             try
@@ -208,16 +218,16 @@ namespace WebApplicationTest.Controllers
                     if (emploee != null)
                     {
                         // Сериализация объекта в JSON
-                        string jsonString = JsonSerializer.Serialize(emploee);
+                        string jsonString = JsonSerializer.Serialize(new[] { emploee });
 
                         // Создаем уникальное имя файла
-                        string fileName = $"employee_{id}_{DateTime.Now:yyyyMMddHHmmss}.json";
+                        string fileName = $"employee_{emploee.FName}_{emploee.LName}_{DateTime.Now:yyyyMMddHHmmss}.json";
 
-                        // Записываем JSON в массив байтов
-                        byte[] fileContents = Encoding.UTF8.GetBytes(jsonString);
+                        //// Записываем JSON в массив байтов
+                        //byte[] fileContents = Encoding.UTF8.GetBytes(jsonString);
 
                         // Возвращаем файловый поток клиенту
-                        return File(fileContents, "application/json", fileName);
+                        return File(Encoding.UTF8.GetBytes(jsonString), "application/json", fileName);
                     }
                 }
 
