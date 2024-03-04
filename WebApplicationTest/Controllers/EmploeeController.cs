@@ -37,16 +37,21 @@ namespace WebApplicationTest.Controllers
            
         }
 
-        
+
         [HttpGet]
         public async Task<IActionResult> GetEmployees(string? FName, string? LName, string minstanding, SortState sortOrder = SortState.FNameAsc)
         {
+            // Сохранение переданных параметров в TempData для сохранения их состояния между запросами
             TempData["FName"] = FName;
             TempData["LName"] = LName;
             TempData["minstanding"] = minstanding;
+
+            // Получение IQueryable объектов Emploee из контекста базы данных
             IQueryable<Emploee> users = _context.Emploees;
-            //DateTime standingDate = DateTime.Now.AddMonths(Convert.ToInt32(standing) * (-1));
-            DateTime standingDate = DateTime.Now.AddYears(Convert.ToInt32(minstanding)*(-1));
+
+            // Рассчитывается дата стажа, отсчитываемая от текущей даты
+            DateTime standingDate = DateTime.Now.AddYears(Convert.ToInt32(minstanding) * (-1));
+
             // Фильтрация по имени
             if (!string.IsNullOrWhiteSpace(FName))
             {
@@ -58,11 +63,13 @@ namespace WebApplicationTest.Controllers
             {
                 users = users.Where(s => s.LName.Contains(LName));
             }
+
             // Фильтрация по стажу
-            if (minstanding != "0"|| minstanding != null)
+            if (minstanding != "0" || minstanding != null)
             {
                 users = users.Where(s => s.DateOfHire < standingDate);
             }
+
             // Применение сортировки
             users = sortOrder switch
             {
@@ -83,65 +90,44 @@ namespace WebApplicationTest.Controllers
                 SortState.CityDesc => users.OrderByDescending(s => s.City),
                 SortState.RegionAsc => users.OrderBy(s => s.Region),
                 SortState.RegionDesc => users.OrderByDescending(s => s.Region),
-                _ => users.OrderBy(s => s.FName),
+                _ => users.OrderBy(s => s.FName), // По умолчанию сортировка по имени в порядке возрастания
             };
 
+            // Создание ViewModel, которая будет передана в представление
             IndexViewModel viewModel = new IndexViewModel
             {
-                Emploees = await users.AsNoTracking().ToListAsync(),
-                SortViewModel = new SortViewModel(sortOrder)
+                Emploees = await users.AsNoTracking().ToListAsync(), // Загрузка пользователей в список с учетом сортировки
+                SortViewModel = new SortViewModel(sortOrder) // Создание модели сортировки для передачи в представление
             };
 
+            // Возвращение представления с ViewModel
             return View(viewModel);
-
-            //IQueryable<Emploee> users = _context.Emploees;
-
-            //users = sortOrder switch
-            //{
-            //    SortState.FNameDesc => users.OrderByDescending(s => s.FName),
-            //    SortState.LNameAsc => users.OrderBy(s => s.LName),
-            //    SortState.LNameDesc => users.OrderByDescending(s => s.LName),
-            //    SortState.EmailAsc => users.OrderBy(s => s.Email),
-            //    SortState.EmailDesc => users.OrderByDescending(s => s.Email),
-            //    SortState.DateOfHireAsc => users.OrderBy(s => s.DateOfHire),
-            //    SortState.DateOfHireDesc => users.OrderByDescending(s => s.DateOfHire),
-            //    SortState.DateOfBirthAsc => users.OrderBy(s => s.DateOfBirth),
-            //    SortState.DateOfBirthDesc => users.OrderByDescending(s => s.DateOfBirth),
-            //    SortState.PositionAsc => users.OrderBy(s => s.Position),
-            //    SortState.PositionDesc => users.OrderByDescending(s => s.Position),
-            //    SortState.AddressAsc => users.OrderBy(s => s.Address),
-            //    SortState.AddressDesc => users.OrderByDescending(s => s.Address),
-            //    SortState.CityAsc => users.OrderBy(s => s.City),
-            //    SortState.CityDesc => users.OrderByDescending(s => s.City),
-            //    SortState.RegionAsc => users.OrderBy(s => s.Region),
-            //    SortState.RegionDesc => users.OrderByDescending(s => s.Region),
-            //    _ => users.OrderBy(s => s.FName),
-            //};
-
-            //IndexViewModel viewModel = new IndexViewModel
-            //{
-            //    Emploees = await users.AsNoTracking().ToListAsync(),
-            //    SortViewModel = new SortViewModel(sortOrder)
-            //};
-
-            //return View(viewModel);
         }
 
-
-     
         /*Стоит отметить, что данный метод Delete обрабатывает только запросы типа POST. Почему? Дело в том, что использование get-методов не безопасно. Например, нам могут прислать письмо с картинкой:
                 <img src="http://адрес_нашего_сайта/Home/Delete/1" />
                     И при открытии письма на сервер будет отправлен get-запрос. И если бы метод Delete обрабатывал бы get-запросы, то объект с id=1 был бы удален из базы данных.*/
         [HttpPost]
         public async Task<IActionResult> Delete(int? id)
         {
+            // Проверка, что передан идентификатор сотрудника
             if (id != null)
             {
+                // Создание нового объекта Emploee с указанным идентификатором
                 Emploee emploee = new Emploee { Id = id.Value };
-                _context.Entry(emploee).State = EntityState.Deleted;// Это выражение опять же сгенерирует sql-выражение DELETE.
+
+                // Установка состояния объекта в EntityState.Deleted,
+                // это говорит Entity Framework, что этот объект должен быть удален из базы данных
+                _context.Entry(emploee).State = EntityState.Deleted;
+
+                // Сохранение изменений в базе данных
                 await _context.SaveChangesAsync();
+
+                // Перенаправление на метод GetEmployees после успешного удаления
                 return RedirectToAction("GetEmployees");
             }
+
+            // В случае отсутствия идентификатора, возвращается NotFound
             return NotFound();
         }
 
