@@ -1,0 +1,262 @@
+﻿@* @model IEnumerable<WebApplicationTest.Models.Emploee> *@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using WebApplicationTest.Models
+<!--импортируем tag-хелперы проекта-->
+@addTagHelper *, WebApplicationTest
+@model WebApplicationTest.Models.IndexViewModel
+
+
+<style>
+    td, th {
+        padding: 0 13px 0 0;
+    }
+
+    .glyphicon {
+        border: solid black;
+        border-width: 0 3px 3px 0;
+        display: inline-block;
+        padding: 3px;
+        margin: 0 5px;
+    }
+
+    .glyphicon-chevron-down {
+        transform: rotate(45deg);
+        -webkit-transform: rotate(45deg);
+    }
+
+    .glyphicon-chevron-up {
+        transform: rotate(-135deg);
+        -webkit-transform: rotate(-135deg);
+    }
+</style>
+
+
+
+<h2>Список Работников</h2>
+<div class="mb-3">
+    <a class="btn btn-primary d-inline" asp-action="Create">Добавить</a>
+    <form method="post" asp-controller="Emploee" asp-action="DownloadAllEmploees" class="d-inline">
+        @foreach (var emploee in Model.Emploees)
+        {
+            <input type="hidden" name="employeeIds" value="@emploee.Id" />
+        }
+        <button type="submit" class="btn btn-primary d-inline">Сохранить все</button>
+    </form>
+    <div class="d-inline">
+        <form method="post" asp-action="UploadJsonFile" enctype="multipart/form-data" class="d-inline">
+            <button type="submit" class="btn btn-primary d-inline">Добавить из файла</button>
+            <label for="fileInput" class="btn btn-outline-secondary" id="fileLabel">
+                Файл не выбран
+            </label>
+            <input type="file" id="fileInput" accept="application/json" name="file" class="d-none">
+            
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3" role="alert">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+            else if (TempData["NoFileMessage"] != null)
+            {
+                <div class="alert alert-danger mt-3" role="alert">
+                    @TempData["NoFileMessage"]
+                </div>
+            }
+            else if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger mt-3" role="alert">
+                    @TempData["ErrorMessage"]
+                </div>
+            }
+        </form>
+    </div>
+</div>
+
+
+<form method="get" asp-controller="Emploee" asp-action="GetEmployees">
+    <div>
+        <label>Имя: </label>
+        <input asp-for="FName" size="12" />
+
+
+        <label>Фамилия: </label>
+        <input asp-for="LName" size="12" />
+
+        <label>Минимальный стаж(лет): </label>
+        <input asp-for="minstanding" pattern="\d+" title="Неверный формат.Введите положительное целое число" size="12" />
+        <input type="submit" class="btn btn-primary" value="Фильтр" />
+    </div>
+</form>
+
+<table class="table">
+    
+    <tr>
+        
+        <th>
+            
+            <sort-header action="GetEmployees" f-name="@TempData["FName"]" l-name="@TempData["LName"]" minstanding ="@TempData["minstanding"]" up="@Model.SortViewModel.Up"
+                         current="@Model.SortViewModel.Current" property="@Model.SortViewModel.FNameSort">
+                Имя
+            </sort-header>
+        </th>
+        <th>
+            <sort-header action="GetEmployees" f-name="@TempData["FName"]" l-name="@TempData["LName"]" minstanding="@TempData["minstanding"]" up="@Model.SortViewModel.Up"
+                         current="@Model.SortViewModel.Current" property="@Model.SortViewModel.LNameSort">
+                Фамилия
+            </sort-header>
+        </th>
+        <th>
+            @if (string.IsNullOrEmpty(TempData["FName"]?.ToString()) && string.IsNullOrEmpty(TempData["LName"]?.ToString()) && string.IsNullOrEmpty(TempData["minstanding"]?.ToString()))
+            {
+                <sort-header action="GetEmployees" up="@Model.SortViewModel.Up"
+                             current="@Model.SortViewModel.Current" property="@Model.SortViewModel.EmailSort">
+                    Email
+                </sort-header>
+            }
+            else
+            {
+                <text>Email</text>
+                    
+            }
+        </th>
+        <th style="width: 100px;">
+            <sort-header action="GetEmployees" f-name="@TempData["FName"]" l-name="@TempData["LName"]" minstanding="@TempData["minstanding"]"  up="@Model.SortViewModel.Up"
+                         current="@Model.SortViewModel.Current" property="@Model.SortViewModel.DateOfHireSort">
+                Стаж
+            </sort-header>
+            <text>(лет)</text>
+        </th>
+        <th>
+            @if (string.IsNullOrEmpty(TempData["FName"]?.ToString()) && string.IsNullOrEmpty(TempData["LName"]?.ToString()) && string.IsNullOrEmpty(TempData["minstanding"]?.ToString()))
+            {
+                <sort-header action="GetEmployees" up="@Model.SortViewModel.Up"
+                             current="@Model.SortViewModel.Current" property="@Model.SortViewModel.DateOfBirthSort">
+                    Дата рождения
+                </sort-header>
+            }
+            else
+            {
+                <text>Дата рождения</text>
+
+            }
+        </th>
+        <th>
+            @if (string.IsNullOrEmpty(TempData["FName"]?.ToString()) && string.IsNullOrEmpty(TempData["LName"]?.ToString()) && string.IsNullOrEmpty(TempData["minstanding"]?.ToString()))
+            {
+                <sort-header action="GetEmployees" up="@Model.SortViewModel.Up"
+                             current="@Model.SortViewModel.Current" property="@Model.SortViewModel.PositionSort">
+                    Должность
+                </sort-header>
+            }
+            else
+            {
+                <text>Должность</text>
+
+            }
+            
+        </th>
+        <th>
+            @if (string.IsNullOrEmpty(TempData["FName"]?.ToString()) && string.IsNullOrEmpty(TempData["LName"]?.ToString()) && string.IsNullOrEmpty(TempData["minstanding"]?.ToString()))
+            {
+                <sort-header action="GetEmployees" up="@Model.SortViewModel.Up"
+                             current="@Model.SortViewModel.Current" property="@Model.SortViewModel.AddressSort">
+                    Адрес
+                </sort-header>
+            }
+            else
+            {
+                <text>Адрес</text>
+
+            }
+            
+        </th>
+        <th>
+            @if (string.IsNullOrEmpty(TempData["FName"]?.ToString()) && string.IsNullOrEmpty(TempData["LName"]?.ToString()) && string.IsNullOrEmpty(TempData["minstanding"]?.ToString()))
+            {
+                <sort-header action="GetEmployees" up="@Model.SortViewModel.Up"
+                             current="@Model.SortViewModel.Current" property="@Model.SortViewModel.CitySort">
+                    Город
+                </sort-header>
+            }
+            else
+            {
+                <text>Город</text>
+            }
+            
+        </th>
+        <th>
+            @if (string.IsNullOrEmpty(TempData["FName"]?.ToString()) && string.IsNullOrEmpty(TempData["LName"]?.ToString()) && string.IsNullOrEmpty(TempData["minstanding"]?.ToString()))
+            {
+                <sort-header action="GetEmployees" up="@Model.SortViewModel.Up"
+                             current="@Model.SortViewModel.Current" property="@Model.SortViewModel.RegionSort">
+                    Регион
+                </sort-header>
+            }
+            else
+            {
+                <text>Регион</text>
+
+            }
+        </th>
+    </tr>
+    @foreach (var item in Model.Emploees)
+    {
+        <tr>
+            <td>@item.FName</td>
+            <td>@item.LName</td>
+            <td>@item.Email</td>
+            @* <td>
+                @if (item.DateOfHire != null)
+                {
+                    var experienceMonths = (int)((DateTime.Now - item.DateOfHire.Value).TotalDays / 30.44); // Среднее количество дней в месяце
+                    @((experienceMonths < 1) ? "< 1" : $"{experienceMonths}")
+                }
+            </td> *@
+            
+            <td>
+                @if (item.DateOfHire != null)
+                {
+                    var experienceYears = (int)((DateTime.Now - item.DateOfHire.Value).TotalDays / 365);
+                    @((experienceYears < 1) ? "< 1 года" : $"{experienceYears}")
+                }
+            </td>
+            @* <td>@item.DateOfHire?.ToString("yyyy-MM-dd")</td> *@
+            <td>@item.DateOfBirth?.ToString("yyyy-MM-dd")</td>
+            
+            <td>@item.Position</td>
+            <td>@item.Address</td>
+            <td>@item.City</td>
+            <td>@item.Region</td>
+            
+
+            <td>
+                <a class="btn btn-primary" asp-action="Edit" asp-controller="Emploee" asp-route-id="@item.Id">Изменить</a>
+            </td>
+            <td>
+                <a class="btn btn-primary" asp-action="DownloadFile" asp-route-id="@item.Id">Сохранить</a>
+            </td>
+            <td>
+                <form asp-controller="Emploee" asp-action="Delete" method="post" asp-route-id="@item.Id">
+                    <button type="submit" class="btn btn-danger">Удалить</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>
+
+<script>
+    document.getElementById('fileInput').addEventListener('change', function () {
+        var fileName = this.value.split('\\').pop();
+        var fileLabel = document.getElementById('fileLabel');
+
+        if (fileName) {
+            fileLabel.innerText = 'Файл выбран';
+            fileLabel.classList.remove('btn-outline-secondary');
+            fileLabel.classList.add('btn-success');
+        } else {
+            fileLabel.innerText = 'Выбрать файл';
+            fileLabel.classList.remove('btn-success');
+            fileLabel.classList.add('btn-outline-secondary');
+        }
+    });
+</script>

@@ -1,0 +1,97 @@
+﻿<div class="text-center">
+    <h2 class="display-4">Введите данные сотрудника</h2>
+     @* <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>  *@
+</div>
+@* @using (Html.BeginForm("Create", "Emploee", FormMethod.Post))
+{
+    <p>
+        <label>Имя</label><br />
+        @Html.TextBox("FName")
+    </p>
+    <p>
+        <label>Фамилия</label><br />
+        @Html.TextBox("LName")
+    </p>
+    <p>
+        <label>Email</label><br />
+        @Html.TextBox("Email")
+    </p>
+    
+    <p>
+        <input type="submit" value="Отправить" />
+    </p>
+}
+
+ *@
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @using (Html.BeginForm("Create", "Emploee", FormMethod.Post))
+            {
+                <p>
+                    <label>Имя</label><br />
+                    @Html.TextBox("FName", null, new { @class = "form-control" })
+                </p>
+                <p>
+                    <label>Фамилия</label><br />
+                    @Html.TextBox("LName", null, new { @class = "form-control" })
+                </p>
+                <p>
+                    <label>Email</label><br />
+                    @Html.TextBox("Email", null, new { @class = "form-control", type = "email" })
+                </p>
+                <p>
+                    <label>Дата приема на работу</label><br />
+                    @Html.TextBox("DateOfHire", null, new { @class = "form-control", @id = "dateOfHire" })
+                </p>
+                <p>
+                    <label>Дата рождения</label><br />
+                    @Html.TextBox("DateOfBirth", null, new { @class = "form-control", @id = "dateOfBirth" })
+                </p>
+                <p>
+                    <label>Должность</label><br />
+                    @Html.TextBox("Position", null, new { @class = "form-control" })
+                </p>
+                <p>
+                    <label>Адрес</label><br />
+                    @Html.TextBox("Address", null, new { @class = "form-control" })
+                </p>
+                <p>
+                    <label>Город</label><br />
+                    @Html.TextBox("City", null, new { @class = "form-control" })
+                </p>
+                <p>
+                    <label>Регион</label><br />
+                    @Html.TextBox("Region", null, new { @class = "form-control" })
+                </p>
+                <p>
+                    <input type="submit" value="Отправить" class="btn btn-primary" />
+                </p>
+            }
+
+            @section scripts {
+                <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+                <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+                <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+                <script>
+                    $(function () {
+                        $("#dateOfHire, #dateOfBirth").datepicker({
+                            dateFormat: 'yy-mm-dd',
+                            changeMonth: true,
+                            changeYear: true,
+                            yearRange: "-100:+0"
+                        });
+                    });
+                </script>
+            }
+
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success mt-3" role="alert">
+                    @TempData["SuccessMessage"]
+                </div>
+            }
+        </div>
+    </div>
+</div>

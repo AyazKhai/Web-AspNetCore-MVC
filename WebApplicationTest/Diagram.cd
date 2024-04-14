@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="WebApplicationTest.Models.Emploee">
+    <Position X="0.5" Y="3.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAKAAAAAAAAAAAgAAAAAAAAAAAQAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Emploee.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplicationTest.Models.Human">
+    <Position X="1" Y="0.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAgCAAABAIAAAAAAAEAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Emploee.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplicationTest.Models.ErrorViewModel">
+    <Position X="15" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ErrorViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplicationTest.Models.IndexViewModel" Collapsed="true">
+    <Position X="17.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAQAAAAAAEABAAAAAAAAAEAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\IndexViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplicationTest.Models.MvcApp.Models.SortViewModel">
+    <Position X="17.75" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>ACCAAgAAAAAACBAQAACABAAAAABAABAAAAAAAAAAAAI=</HashCode>
+      <FileName>Models\SortViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplicationTest.Models.ApplicationContext">
+    <Position X="3.25" Y="2.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ApplicationContext.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplicationTest.Controllers.EmploeeController">
+    <Position X="7.75" Y="2" Width="5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAhQAAQCAAAAAAAAEAAEACAAAAAAAAAAA=</HashCode>
+      <FileName>Controllers\EmploeeController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplicationTest.TagHelpers.SortHeaderTagHelper">
+    <Position X="13.5" Y="2.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAEABAAAgCAAAEEAAAAAAAAAAAAIQAAAAY=</HashCode>
+      <FileName>TagHelpers\SortHeaderTagHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Mvc.Controller" Collapsed="true">
+    <Position X="8" Y="0.75" Width="4.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.EntityFrameworkCore.DbContext" Collapsed="true">
+    <Position X="3.75" Y="1.5" Width="2.25" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Razor.TagHelpers.TagHelper" Collapsed="true">
+    <Position X="13" Y="0.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WebApplicationTest.TaetClass">
+    <Position X="4.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAQAAAAAAAAAAA=</HashCode>
+      <FileName>TaetClass.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Times New Roman" Size="9" />
+</ClassDiagram>

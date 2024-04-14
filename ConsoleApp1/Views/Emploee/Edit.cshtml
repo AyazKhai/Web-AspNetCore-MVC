@@ -1,0 +1,76 @@
+﻿@model WebApplicationTest.Models.Emploee
+
+
+
+<style>
+    /* Дополнительные стили для изображения */
+    .custom-image {
+        max-width: 100%; /* Максимальная ширина изображения равна ширине родительского контейнера */
+        height: auto; /* Автоматическое поддержание соотношения сторон */
+        border-radius: 0px; /* Закругление углов изображения */
+        margin-bottom: 0px; /* Небольшой отступ снизу */
+    }
+
+    /* Стили для родительского контейнера изображения */
+    .image-container {
+        text-align: right; /* Выравнивание по центру */
+        background: url('~/images/02.jpg') center center no-repeat; /* Установка изображения в качестве фона */ background-size: cover; /* Растягивание фона на всю ширину и высоту контейнера */
+        padding: 20px; /* Добавление отступов для текста формы */
+    }
+
+    /* Стили для формы */
+    form {
+        background-color: rgba(255, 255, 255, 0.8); /* Прозрачный фон для формы */
+        padding: 20px; /* Добавление отступов для текста формы */
+        border-radius: 10px; /* Закругление углов формы */
+    }
+</style>
+<div class="container">
+    <div class="row">
+        <div class="col-md-9">
+            <h2>Редактирование данных</h2>
+            <form asp-action="edit" asp-controller="Emploee" asp-route-id="@Model.Id">
+                <p>
+                    <label asp-for="FName">Имя</label><br />
+                    <input type="text" asp-for="FName" />
+                </p>
+                <p>
+                    <label asp-for="LName">Фамилия</label><br />
+                    <input type="text" asp-for="LName" />
+                </p>
+                <p>
+                    <label asp-for="Email">Email</label><br />
+                    <input type="text" asp-for="Email" />
+                </p>
+                <p>
+                    <label asp-for="DateOfHire">Дата приема на работу</label><br />
+                    <input type="text" asp-for="DateOfHire" />
+                </p>
+                <p>
+                    <label asp-for="DateOfBirth">День рождения</label><br />
+                    <input type="text" asp-for="DateOfBirth" />
+                </p>
+                <p>
+                    <label asp-for="Position">Должность</label><br />
+                    <input type="text" asp-for="Position" />
+                </p>
+                <p>
+                    <label asp-for="Address">Адрес</label><br />
+                    <input type="text" asp-for="Address" />
+                </p>
+                <p>
+                    <label asp-for="City">Город</label><br />
+                    <input type="text" asp-for="City" />
+                </p>
+                <p>
+                    <label asp-for="Region">Регион</label><br />
+                    <input type="text" asp-for="Region" />
+                </p>
+                <p>
+                    <input type="submit" value="Сохранить" class="btn btn-primary" />
+                </p>
+            </form>
+        </div>
+    </div>
+</div>
+

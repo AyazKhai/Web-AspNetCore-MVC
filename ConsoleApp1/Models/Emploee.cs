@@ -21,7 +21,7 @@ namespace WebApplicationTest.Models
 
     }
 
-    public abstract class Human 
+    public class Human 
     {
         [Display(Name = "First Name")]
         [Required(ErrorMessage = "Frst name is required.")]
@@ -46,16 +46,5 @@ namespace WebApplicationTest.Models
         public string City { get; set; }
 
         public string Region { get; set; }
-        //private string lastName;
-
-        //public string getLastName()
-        //{
-        //    return lastName;
-        //}
-
-        //public void setLastName(string lastName)
-        //{
-        //    this.lastName = lastName;
-        //}
     }
 }
