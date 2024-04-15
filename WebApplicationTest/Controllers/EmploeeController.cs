@@ -16,6 +16,7 @@ using System.Diagnostics;
 
 namespace WebApplicationTest.Controllers
 {
+
     public class EmploeeController : Controller
     {
         private readonly ApplicationContext _context;
@@ -81,6 +82,7 @@ namespace WebApplicationTest.Controllers
             users = sortOrder switch
             {
                 SortState.FNameDesc => users.OrderByDescending(s => s.FName),
+                SortState.FNameAsc => users.OrderBy(s => s.FName),
                 SortState.LNameAsc => users.OrderBy(s => s.LName),
                 SortState.LNameDesc => users.OrderByDescending(s => s.LName),
                 SortState.EmailAsc => users.OrderBy(s => s.Email),
@@ -100,13 +102,14 @@ namespace WebApplicationTest.Controllers
                 _ => users.OrderBy(s => s.FName), // По умолчанию сортировка по имени в порядке возрастания
             };
 
+            
             // Создание ViewModel, которая будет передана в представление
             IndexViewModel viewModel = new IndexViewModel
             {
                 Emploees = await users.AsNoTracking().ToListAsync(), // Загрузка пользователей в список с учетом сортировки
                 SortViewModel = new SortViewModel(sortOrder) // Создание модели сортировки для передачи в представление
             };
-
+            Console.WriteLine(sortOrder);
             // Возвращение представления с ViewModel
             return View(viewModel);
         }

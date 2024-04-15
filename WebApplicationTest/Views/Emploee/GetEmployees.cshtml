@@ -93,19 +93,20 @@
     <tr>
         
         <th>
-            
             <sort-header action="GetEmployees" f-name="@TempData["FName"]" l-name="@TempData["LName"]" minstanding ="@TempData["minstanding"]" up="@Model.SortViewModel.Up"
                          current="@Model.SortViewModel.Current" property="@Model.SortViewModel.FNameSort">
                 Имя
             </sort-header>
         </th>
         <th>
+           
             <sort-header action="GetEmployees" f-name="@TempData["FName"]" l-name="@TempData["LName"]" minstanding="@TempData["minstanding"]" up="@Model.SortViewModel.Up"
                          current="@Model.SortViewModel.Current" property="@Model.SortViewModel.LNameSort">
                 Фамилия
             </sort-header>
         </th>
         <th>
+
             @if (string.IsNullOrEmpty(TempData["FName"]?.ToString()) && string.IsNullOrEmpty(TempData["LName"]?.ToString()) && string.IsNullOrEmpty(TempData["minstanding"]?.ToString()))
             {
                 <sort-header action="GetEmployees" up="@Model.SortViewModel.Up"

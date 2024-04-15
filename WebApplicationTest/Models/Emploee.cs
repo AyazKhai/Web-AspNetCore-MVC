@@ -46,16 +46,6 @@ namespace WebApplicationTest.Models
         public string City { get; set; }
 
         public string Region { get; set; }
-        //private string lastName;
-
-        //public string getLastName()
-        //{
-        //    return lastName;
-        //}
-
-        //public void setLastName(string lastName)
-        //{
-        //    this.lastName = lastName;
-        //}
+        
     }
 }
